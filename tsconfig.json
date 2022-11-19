@@ -1,0 +1,17 @@
+{
+  "include": ["src/**/*.ts", "src/test.ts"],
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": ["ES2020", "dom"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "checkJs": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "typeRoots": ["./src/types"],
+    "outDir": "./dist"
+  }
+}

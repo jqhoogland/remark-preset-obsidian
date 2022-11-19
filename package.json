@@ -1,0 +1,74 @@
+{
+  "name": "remark-preset-obsidian",
+  "version": "0.0.1",
+  "description": "Obsidian-flavored markdown presets using remark plugins",
+  "keywords": [
+    "remark",
+    "preset",
+    "obsidian"
+  ],
+  "scripts": {
+    "build": "rimraf \"*.d.ts\" && tsc && type-coverage",
+    "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
+    "test": "npm run build && npm run format"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jqhoogland/remark-preset-obsidian.git"
+  },
+  "author": "Jesse Hoogland",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jqhoogland/remark-preset-obsidian/issues"
+  },
+  "homepage": "https://github.com/jqhoogland/remark-preset-obsidian#readme",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.d.ts",
+    "index.js"
+  ],
+  "prettier": {
+    "tabWidth": 2,
+    "useTabs": false,
+    "singleQuote": true,
+    "semi": true,
+    "trailingComma": "all",
+    "printWidth": 80
+  },
+  "dependencies": {
+    "@benrbray/remark-cite": "^1.1.0",
+    "citeproc": "^2.4.62",
+    "lodash-es": "^4.17.21",
+    "mdast-builder": "^1.1.1",
+    "remark-frontmatter": "^4.0.1",
+    "remark-gfm": "^3.0.0",
+    "remark-github": "^11.0.0",
+    "remark-math": "^5.1.1",
+    "remark-mermaidjs": "^2.1.1",
+    "remark-parse": "^10.0.1",
+    "remark-stringify": "^10.0.2",
+    "remark-wiki-link": "^1.0.4",
+    "unified": "^10.0.0",
+    "unist-util-visit": "^4.1.0",
+    "unist-util-visit-parents": "^5.1.0",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.6",
+    "@types/tape": "^4.0.0",
+    "prettier": "^2.0.0",
+    "remark-cli": "^10.0.0",
+    "rimraf": "^3.0.0",
+    "type-coverage": "^2.0.0",
+    "type-fest": "^2.18.0",
+    "typescript": "^4.0.0",
+    "xo": "^0.45.0"
+  },
+  "remarkConfig": {
+    "plugins": [
+      "./index.js"
+    ]
+  }
+}
