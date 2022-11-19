@@ -6,6 +6,7 @@ Includes existing plugins like:
 - [`remark-gfm` (Github-flavored markdown)](https://github.com/remarkjs/remark-gfm)
 - [`remark-frontmatter`](https://github.com/remarkjs/remark-frontmatter)
 - [`remark-math`](https://github.com/remarkjs/remark-math)
+- [`remark-wiki-link`](https://github.com/landakram/remark-wiki-link)
 
 And introduces a new plugin:
 - `remark-highlight` (to add support for highlighted text with the `==syntax==`)

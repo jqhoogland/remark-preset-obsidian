@@ -1,6 +1,6 @@
 {
   "name": "remark-preset-obsidian",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Obsidian-flavored markdown presets using remark plugins",
   "keywords": [
     "remark",
@@ -23,11 +23,10 @@
   },
   "homepage": "https://github.com/jqhoogland/remark-preset-obsidian#readme",
   "type": "module",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "index.d.ts",
-    "index.js"
+    "dist/**"
   ],
   "prettier": {
     "tabWidth": 2,
