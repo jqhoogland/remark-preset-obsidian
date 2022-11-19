@@ -19,7 +19,7 @@ import { Bibliography, Citation } from "./types/csl";
 import CSL from 'citeproc';
 
 // TODO: Put this in its own file
-function getProcessor(citations: Bibliography) {
+export function getProcessor(citations: Bibliography) {
   const styleAsText = chicagoFullnoteBibliography;
   const citeproc = new CSL.Engine({
     retrieveLocale: () => enLocale,
@@ -40,7 +40,7 @@ function getProcessor(citations: Bibliography) {
   return citeproc;
 };
 
-export const remarkBibliography = (options: RemarkBibliographyOptions) => {
+export function remarkBibliography(options: RemarkBibliographyOptions) {
   const bibliography = options.bibliography;
   
   return (tree: Root) => {
@@ -111,7 +111,7 @@ export const remarkBibliography = (options: RemarkBibliographyOptions) => {
  * Converts a tree of mdast nodes to a dictionary of citation keys to citation 
  * indexes.
  */
-export const extractCitations = (tree: Root): Record<string, number> => {
+export function extractCitations(tree: Root): Record<string, number> {
   let citations = new Map<string, number>();
 
   visit(tree, "cite", (node: CitationNode) => {
