@@ -8,6 +8,7 @@ export interface RemarkBibliographyOptions {
     /** Path to the bibliography */
     bibliography: Bibliography;
     format?: "CSL";
+    appendBibliographySection?: boolean;
 }
 
 export interface CitationItem {

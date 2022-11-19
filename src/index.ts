@@ -40,17 +40,18 @@ function getProcessor(citations: Bibliography) {
   return citeproc;
 };
 
-const remarkBibliography = (options: RemarkBibliographyOptions) => {
+export const remarkBibliography = (options: RemarkBibliographyOptions) => {
   const bibliography = options.bibliography;
+  
   return (tree: Root) => {
     let citations = new Map<string, number>();
 
-    // 1st pass: find all citations and convert `[@hoogland2022]` to `[1]` 
+    // 1st pass: find all citations and convert to Chicago-style citations (e.g. `[@hoogland2022]` to `[1]`)
     visit(tree, "cite", (node: CitationNode) => {
       let value = node.value.slice(1, node.value.length - 1);
       node.data.citeItems.forEach(({ key }) => {
         citations.set(key, (citations.get(key) ?? 0) + 1);
-        // TODO: More efficient way to find index in set?x
+        // TODO: More efficient way to find index in set?
         const newCitationKey = [...citations.keys()].indexOf(key) + 1;
         // TODO:: Make link
         value = value.replace(`@${key}`,
@@ -63,7 +64,6 @@ const remarkBibliography = (options: RemarkBibliographyOptions) => {
           + "]"
         );
       });
-      // console.log({ value, prev: node.value });
 
       // @ts-ignore
       node.type = "html"
@@ -82,31 +82,47 @@ const remarkBibliography = (options: RemarkBibliographyOptions) => {
         '<a href="$1">$1.</a>'
       ))
 
-    console.log({ references })
 
     // 2nd pass: add a bibliography section at the end.
-    // @ts-ignore
-    tree.children[tree.children.length] = heading(2, text("References"))
-    // @ts-ignore
-    tree.children[tree.children.length] = (
-      paragraph(list('ordered',
-        [...citations].map(([key, value], i) => listItem(html(
-          `<span id="ref-${i + 1}">`
-          + references[i]
-          + " "
-          + range(0, value).map(j => (
-            `<a href="#ref-${i + 1}-${j + 1}">`
-            + "↩️"
-            + ((j > 0) ? `<sup>${j + 1}</sup>` : "")
-            + "</a>"
-          )).join("; ")
-          + "</span>"
+    if (options.appendBibliographySection) {
+      // @ts-ignore
+      tree.children[tree.children.length] = heading(2, text("References"))
+      // @ts-ignore
+      tree.children[tree.children.length] = (
+        paragraph(list('ordered',
+          [...citations].map(([key, value], i) => listItem(html(
+            `<span id="ref-${i + 1}">`
+            + references[i]
+            + " "
+            + range(0, value).map(j => (
+              `<a href="#ref-${i + 1}-${j + 1}">`
+              + "↩️"
+              + ((j > 0) ? `<sup>${j + 1}</sup>` : "")
+              + "</a>"
+            )).join("; ")
+            + "</span>"
+          )))
         )))
-      )))
-
-    // console.log(JSON.stringify(tree.children[tree.children.length - 1]?.children?.[0]?.children, null, 2))
+    }
   };
 };
+
+/**
+ * Converts a tree of mdast nodes to a dictionary of citation keys to citation 
+ * indexes.
+ */
+export const extractCitations = (tree: Root): Record<string, number> => {
+  let citations = new Map<string, number>();
+
+  visit(tree, "cite", (node: CitationNode) => {
+    node.data.citeItems.forEach(({ key }) => {
+      citations.set(key, (citations.get(key) ?? 0) + 1);
+    });
+  })
+
+  return Object.fromEntries(citations);
+}
+
 
 // TOOD: spin these out
 // import remarkHighlight from './remarkHighlight';
@@ -161,7 +177,7 @@ export function remarkHighlight(options?: { highlightClassName: string }) {
 
 type RemarkPresetObsidianOptions = Exclude<RemarkWikiLinkOptions, 'aliasDivider'> & { bibliography: Bibliography }
 
-const remarkPresetObsidian = (options: RemarkPresetObsidianOptions): Preset => {
+export const remarkPresetObsidian = (options: RemarkPresetObsidianOptions): Preset => {
   const { permalinks, pageResolver, hrefTemplate, wikiLinkClassName, newClassName, bibliography } = options;
 
   return {
