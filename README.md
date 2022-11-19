@@ -5,7 +5,7 @@ Remark preset to recreate Obsidian-flavored markdown.
 Includes existing plugins like:
 - [`remark-gfm` (Github-flavored markdown)](https://github.com/remarkjs/remark-gfm)
 - [`remark-frontmatter`](https://github.com/remarkjs/remark-frontmatter)
-- [`remark-math](https://github.com/remarkjs/remark-math)
+- [`remark-math`](https://github.com/remarkjs/remark-math)
 
 And introduces a new plugin:
 - `remark-highlight` (to add support for highlighted text with the `==syntax==`)
