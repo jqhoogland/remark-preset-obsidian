@@ -40,6 +40,40 @@ export function getProcessor(citations: Bibliography) {
   return citeproc;
 };
 
+
+export function getHTMLReference(reference: string, index: number, numBackRefs: number = 1) {
+  return `<span id="ref-${index + 1}">`
+            + reference
+            + " "
+            + range(0, numBackRefs).map(j => (
+              `<a href="#ref-${index + 1}-${j + 1}">`
+              + "↩️"
+              + ((j > 0) ? `<sup>${j + 1}</sup>` : "")
+              + "</a>"
+            )).join("; ")
+            + "</span>"
+}
+
+export function wrapLinkWithAnchor(text: string) {
+  return text.replace(
+    /(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))\./,
+    '<a href="$1">$1.</a>'
+  )
+}
+
+export function getReferences(citationKeysToCounts: Record<string, number>, bibliography: Bibliography): string[] {
+  const processor = getProcessor(bibliography);
+  processor.updateItems(Object.keys(citationKeysToCounts));
+  
+  const counts = Object.values(citationKeysToCounts);
+  
+  const references = processor.makeBibliography()[1]
+    // Replace urls (There's always a period at the end)
+    .map((ref: string, i: number) => getHTMLReference(wrapLinkWithAnchor(ref), i, counts[i]))
+
+  return references;
+}
+
 export function remarkBibliography(options: RemarkBibliographyOptions) {
   const bibliography = options.bibliography;
   
@@ -73,15 +107,7 @@ export function remarkBibliography(options: RemarkBibliographyOptions) {
       delete node.data;
     });
 
-    const processor = getProcessor(bibliography)
-    processor.updateItems([...citations.keys()])
-    const references = processor.makeBibliography()[1]
-      // Replace urls (There's always a period at the end)
-      .map((ref: string) => ref.replace(
-        /(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))\./,
-        '<a href="$1">$1.</a>'
-      ))
-
+    const references = getReferences(Object.fromEntries(citations), bibliography);
 
     // 2nd pass: add a bibliography section at the end.
     if (options.appendBibliographySection) {
@@ -90,17 +116,8 @@ export function remarkBibliography(options: RemarkBibliographyOptions) {
       // @ts-ignore
       tree.children[tree.children.length] = (
         paragraph(list('ordered',
-          [...citations].map(([key, value], i) => listItem(html(
-            `<span id="ref-${i + 1}">`
-            + references[i]
-            + " "
-            + range(0, value).map(j => (
-              `<a href="#ref-${i + 1}-${j + 1}">`
-              + "↩️"
-              + ((j > 0) ? `<sup>${j + 1}</sup>` : "")
-              + "</a>"
-            )).join("; ")
-            + "</span>"
+          references.map(reference => listItem(html(
+            reference
           )))
         )))
     }
