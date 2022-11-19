@@ -42,7 +42,7 @@ export function getProcessor(citations: Bibliography) {
 
 
 export function getHTMLReference(reference: string, index: number, numBackRefs: number = 1) {
-  return `<span id="ref-${index + 1}">`
+  return `<span class="csl-bib-item" id="ref-${index + 1}">`
             + reference
             + " "
             + range(0, numBackRefs).map(j => (
@@ -90,7 +90,7 @@ export function remarkBibliography(options: RemarkBibliographyOptions) {
         // TODO:: Make link
         value = value.replace(`@${key}`,
           "["
-          + `<a href="#ref-${newCitationKey}">`
+          + `<a class="csl-cite" href="#ref-${newCitationKey}">`
           + `<span id="ref-${newCitationKey}-${citations.get(key)}">`
           + newCitationKey
           + "</span>"

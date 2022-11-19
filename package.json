@@ -1,6 +1,6 @@
 {
   "name": "remark-preset-obsidian",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Obsidian-flavored markdown presets using remark plugins",
   "keywords": [
     "remark",
